@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>신나는 두더지 잡기 (Super Whack-A-Mole)</title>
+  <meta name="description" content="화려한 아케이드 두더지 잡기 게임! 다양한 두더지와 콤보 시스템, 온라인 스코어보드를 즐겨보세요.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&family=Dohyeon&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="game-container">
+    <!-- Header / HUD -->
+    <header class="hud-header">
+      <h1 class="logo">
+        <span class="logo-emoji">🔨</span> 두더지 잡기 <span class="logo-badge">PRO</span>
+      </h1>
+      
+      <div class="hud-stats">
+        <div class="stat-card">
+          <span class="stat-label">점수</span>
+          <span id="score" class="stat-value text-gold">0</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">남은 시간</span>
+          <span id="timer" class="stat-value text-accent">30s</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">콤보</span>
+          <span id="combo" class="stat-value text-combo">x1</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">최고 점수</span>
+          <span id="high-score" class="stat-value">0</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Controls Bar -->
+    <section class="controls-bar">
+      <div class="difficulty-selector">
+        <label for="difficulty">난이도:</label>
+        <select id="difficulty" class="styled-select">
+          <option value="easy">쉬움 (3x3)</option>
+          <option value="medium" selected>보통 (3x3)</option>
+          <option value="hard">어려움 (4x4)</option>
+          <option value="frenzy">광란 (무제한 4x4)</option>
+        </select>
+      </div>
+
+      <div class="action-buttons">
+        <button id="btn-start" class="btn btn-primary">
+          <span class="btn-icon">▶</span> 게임 시작
+        </button>
+        <button id="btn-audio" class="btn btn-icon-only" title="사운드 토글">
+          🔊
+        </button>
+        <button id="btn-info" class="btn btn-icon-only" title="게임 방법">
+          ❓
+        </button>
+      </div>
+    </section>
+
+    <!-- Combo Banner & Floating Text Container -->
+    <div id="combo-banner" class="combo-banner hidden">
+      <span id="combo-text">COMBO 3x! 🔥</span>
+    </div>
+
+    <!-- Main Game Board -->
+    <main id="game-board" class="game-board grid-3x3">
+      <!-- Dynamic holes will be injected here via JS -->
+    </main>
+
+    <!-- Canvas for impact particle FX -->
+    <canvas id="fx-canvas"></canvas>
+
+    <!-- Footer -->
+    <footer class="game-footer">
+      <p>두더지를 연속으로 잡으면 콤보 점수 획득! 💣 폭탄 두더지는 피하세요!</p>
+    </footer>
+  </div>
+
+  <!-- Game Over Modal -->
+  <div id="modal-gameover" class="modal-overlay hidden">
+    <div class="modal-content glass-card">
+      <h2 class="modal-title">🎮 게임 종료!</h2>
+      <div class="final-score-box">
+        <span class="score-label">최종 점수</span>
+        <span id="final-score" class="final-score">0</span>
+        <span id="new-record-badge" class="new-record hidden">🏆 최고 기록 달성!</span>
+      </div>
+
+      <div class="game-summary">
+        <div class="summary-item">
+          <span>명중률</span>
+          <strong id="summary-accuracy">0%</strong>
+        </div>
+        <div class="summary-item">
+          <span>최대 콤보</span>
+          <strong id="summary-combo">0x</strong>
+        </div>
+        <div class="summary-item">
+          <span>잡은 두더지</span>
+          <strong id="summary-moles">0마리</strong>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button id="btn-restart" class="btn btn-primary btn-large">
+          🔄 다시 도전하기
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- How to Play Modal -->
+  <div id="modal-info" class="modal-overlay hidden">
+    <div class="modal-content glass-card info-content">
+      <button id="btn-close-info" class="modal-close-btn">&times;</button>
+      <h2>📖 게임 규칙</h2>
+      <div class="info-grid">
+        <div class="mole-info-card">
+          <span class="mole-preview mole-normal">🐹</span>
+          <div>
+            <h4>일반 두더지</h4>
+            <p>기본 두더지 (+10점)</p>
+          </div>
+        </div>
+        <div class="mole-info-card">
+          <span class="mole-preview mole-golden">🌟</span>
+          <div>
+            <h4>황금 두더지</h4>
+            <p>보너스 두더지 (+30점, 시간 +2초)</p>
+          </div>
+        </div>
+        <div class="mole-info-card">
+          <span class="mole-preview mole-bomb">💣</span>
+          <div>
+            <h4>폭탄 두더지</h4>
+            <p>위험! 클릭 금지 (-20점, 시간 -3초)</p>
+          </div>
+        </div>
+        <div class="mole-info-card">
+          <span class="mole-preview mole-helmet">🪖</span>
+          <div>
+            <h4>헬멧 두더지</h4>
+            <p>2번 잡아야 함 (+25점)</p>
+          </div>
+        </div>
+      </div>
+      <p class="tip-text">💡 <strong>팁:</strong> 끊기지 않고 연속으로 잡을수록 콤보 배율이 점점 커집니다!</p>
+    </div>
+  </div>
+
+  <script src="audio.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
