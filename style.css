@@ -30,24 +30,30 @@ body {
   font-family: var(--font-family);
   background: var(--bg-gradient);
   color: var(--text-main);
-  min-height: 100vh;
+  height: 100vh;
+  height: 100dvh;
+  width: 100vw;
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow-x: hidden;
+  overflow: hidden;
   cursor: crosshair;
 }
 
 /* Container */
 .game-container {
   width: 100%;
-  max-width: 720px;
-  padding: 20px;
+  max-width: 560px;
+  height: 100vh;
+  height: 100dvh;
+  padding: 12px 16px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  justify-content: space-between;
+  gap: 10px;
   position: relative;
   z-index: 1;
+  box-sizing: border-box;
 }
 
 /* Header HUD */
@@ -57,29 +63,30 @@ body {
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--panel-border);
   border-radius: var(--radius-lg);
-  padding: 18px 24px;
+  padding: 10px 16px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 8px;
   box-shadow: var(--shadow-glow);
+  flex-shrink: 0;
 }
 
 .logo {
-  font-size: 1.8rem;
+  font-size: 1.3rem;
   font-weight: 900;
   letter-spacing: 0.5px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
   background: linear-gradient(135deg, #fcd34d, #f59e0b, #ef4444);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .logo-badge {
-  font-size: 0.75rem;
-  padding: 2px 8px;
+  font-size: 0.65rem;
+  padding: 2px 6px;
   background: #ef4444;
   color: #fff;
   border-radius: 999px;
@@ -90,29 +97,29 @@ body {
 .hud-stats {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
+  gap: 8px;
 }
 
 .stat-card {
   background: rgba(0, 0, 0, 0.25);
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: var(--radius-md);
-  padding: 10px;
+  padding: 6px 4px;
   text-align: center;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
 }
 
 .stat-label {
-  font-size: 0.75rem;
+  font-size: 0.65rem;
   color: var(--text-sub);
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
 }
 
 .stat-value {
-  font-size: 1.4rem;
+  font-size: 1.15rem;
   font-weight: 800;
 }
 
@@ -129,16 +136,16 @@ body {
   backdrop-filter: blur(12px);
   border: 1px solid var(--panel-border);
   border-radius: var(--radius-md);
-  padding: 12px 18px;
-  gap: 12px;
-  flex-wrap: wrap;
+  padding: 8px 14px;
+  gap: 8px;
+  flex-shrink: 0;
 }
 
 .difficulty-selector {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 0.95rem;
+  gap: 6px;
+  font-size: 0.85rem;
   color: var(--text-sub);
 }
 
@@ -147,9 +154,9 @@ body {
   color: var(--text-main);
   border: 1px solid var(--panel-border);
   border-radius: 8px;
-  padding: 6px 12px;
+  padding: 4px 8px;
   font-family: inherit;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   cursor: pointer;
   outline: none;
   transition: border-color 0.2s;
@@ -161,20 +168,21 @@ body {
 
 .action-buttons {
   display: flex;
-  gap: 10px;
+  gap: 8px;
 }
 
 .btn {
   font-family: inherit;
   font-weight: 700;
   border: none;
-  border-radius: 10px;
-  padding: 8px 16px;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 0.85rem;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 4px;
   transition: transform 0.15s, box-shadow 0.15s, filter 0.15s;
 }
 
@@ -196,8 +204,8 @@ body {
 .btn-icon-only {
   background: rgba(255, 255, 255, 0.08);
   color: #fff;
-  padding: 8px 12px;
-  font-size: 1.1rem;
+  padding: 6px 10px;
+  font-size: 1rem;
 }
 
 .btn-icon-only:hover {
@@ -207,14 +215,14 @@ body {
 /* Combo Banner */
 .combo-banner {
   position: absolute;
-  top: 140px;
+  top: 100px;
   left: 50%;
   transform: translateX(-50%) scale(1);
   background: linear-gradient(135deg, #f43f5e, #be123c);
   color: #fff;
-  padding: 8px 24px;
+  padding: 6px 18px;
   border-radius: 999px;
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: 900;
   letter-spacing: 1px;
   box-shadow: 0 0 20px rgba(244, 63, 94, 0.8);
@@ -232,34 +240,49 @@ body {
   display: none !important;
 }
 
-<!-- Main Board & Mole Holes -->
+/* Main Board & Mole Holes */
 .game-board {
   display: grid;
-  gap: 16px;
+  gap: 12px;
   background: linear-gradient(180deg, #14532d 0%, #064e3b 100%);
   border: 4px solid #166534;
-  border-radius: 24px;
-  padding: 24px;
+  border-radius: 20px;
+  padding: 14px;
   box-shadow: inset 0 6px 16px rgba(0, 0, 0, 0.4), 0 10px 30px rgba(0,0,0,0.5);
   position: relative;
+  flex: 1;
+  min-height: 0;
+  max-height: 58vh;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  margin: 0 auto;
+  align-content: center;
+  justify-content: center;
+  box-sizing: border-box;
 }
 
 .grid-3x3 {
   grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
 }
 
 .grid-4x4 {
   grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: 8px;
+  padding: 10px;
 }
 
 .hole {
   position: relative;
+  width: 100%;
+  height: 100%;
   aspect-ratio: 1 / 1;
   background: radial-gradient(ellipse at center, var(--hole-depth) 0%, #0c0a09 80%);
-  border: 4px solid var(--hole-rim);
+  border: 3px solid var(--hole-rim);
   border-radius: 50%;
   overflow: hidden;
-  box-shadow: inset 0 10px 20px rgba(0, 0, 0, 0.8), 0 4px 10px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 6px 14px rgba(0, 0, 0, 0.8), 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 /* Grass trim overlay on top of bottom half of hole */
@@ -289,7 +312,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 3rem;
+  font-size: clamp(1.6rem, 3.5vw, 2.5rem);
   cursor: pointer;
   transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   z-index: 2;
